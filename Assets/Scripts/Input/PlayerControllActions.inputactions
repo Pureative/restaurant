@@ -1,0 +1,74 @@
+{
+    "name": "PlayerControllActions",
+    "maps": [
+        {
+            "name": "ActionMap",
+            "id": "010ef8b2-01f5-4682-a2a2-589797a11699",
+            "actions": [
+                {
+                    "name": "DragAction",
+                    "type": "Value",
+                    "id": "0e36638c-dda7-4ab6-a364-99f170957e6e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ClickAction",
+                    "type": "Button",
+                    "id": "21d3e8eb-e4c4-46bd-8f0b-948cd27c472c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "27b722c9-0e47-414b-8f7b-786c4444f069",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "33818bc8-39c6-47d0-a8a4-4727aa9753f8",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DragAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4754139b-b02c-49b3-aed1-d179ac602c74",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ClickAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8205fa5b-b63d-48cd-a4c7-66f13e0852a5",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
