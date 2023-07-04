@@ -1,50 +1,43 @@
-﻿using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
+﻿using System;
+using Objects;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace Projectiles
 {
     [RequireComponent(typeof(TrajectoryPredictor))]
-    public class Projectile : MonoBehaviour
+    public class Thrower : MonoBehaviour
     {
+        public UnityEvent OnMiss;
 
-        [SerializeField]
-        Rigidbody objectToThrow;
+        [Range(0.0f, 100.0f)] public float maxForce;
 
-        [SerializeField, Range(0.0f, 100.0f)]
-        float force;
 
-        [SerializeField]
-        Transform startDirection;
+        [SerializeField] Transform startDirection;
 
-        [SerializeField]
-        Transform endDirection;
-        
+        [SerializeField] Transform endDirection;
+
+
+        [NonSerialized] public float force;
+        [NonSerialized] public Rigidbody objectToThrow;
 
         private TrajectoryPredictor _trajectoryPredictor;
-        private PlayerControllActions _input;
         private Vector3 _direction;
 
         private void OnEnable()
         {
             _trajectoryPredictor = GetComponent<TrajectoryPredictor>();
-
-            _input = new PlayerControllActions();
-            _input.ActionMap.Fire.performed += ThrowObject;
-            _input.Enable();
         }
 
-        void Update()
+        public void Predict()
         {
             CalcDirection();
-            Predict();
+            if (objectToThrow)
+            {
+                _trajectoryPredictor.PredictTrajectory(ProjectileData());
+            }
         }
 
-        void Predict()
-        {
-            _trajectoryPredictor.PredictTrajectory(ProjectileData());
-        }
-        
         void CalcDirection()
         {
             Vector3 direction = endDirection.position - startDirection.position;
@@ -65,9 +58,10 @@ namespace Projectiles
             return projectileData;
         }
 
-        void ThrowObject(InputAction.CallbackContext ctx)
+        public void ThrowObject()
         {
             Rigidbody thrownObject = Instantiate(objectToThrow, endDirection.position, Quaternion.identity);
+            thrownObject.GetComponent<ThrowableObject>().OnMiss.AddListener(OnMiss.Invoke);
             thrownObject.AddForce(_direction * force, ForceMode.Impulse);
         }
     }

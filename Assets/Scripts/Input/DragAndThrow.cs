@@ -1,8 +1,12 @@
+using Projectiles;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Screen = UnityEngine.Device.Screen;
 
 namespace Input
 {
-    public class DragLook : MonoBehaviour
+    [RequireComponent(typeof(TrajectoryPredictor), typeof(Thrower))]
+    public class DragAndThrow : MonoBehaviour
     {
         public Vector2 clampInDegrees = new(360f, 180f);
         public Vector2 sensitivity = new(0.1f, 0.1f);
@@ -13,22 +17,49 @@ namespace Input
         public bool lockY;
 
 
+        private Thrower _thrower;
+        private TrajectoryPredictor _trajectoryPredictor;
         private Vector2 _mouseFinal;
         private Vector2 _smoothMouse;
         private Vector2 _targetDirection;
         private Vector2 _targetCharacterDirection;
         private PlayerControllActions _input;
+        private Vector2 _dragStart;
+        private Vector2 _currentDrag;
+        private bool _isDragging;
 
         private void OnEnable()
         {
             _input = new PlayerControllActions();
+            _input.ActionMap.ClickAction.started += StartDrag;
+            _input.ActionMap.ClickAction.canceled += EndDrag;
             _input.Enable();
+        }
+
+        private void StartDrag(InputAction.CallbackContext obj)
+        {
+            _isDragging = true;
+            _dragStart = _input.ActionMap.DragAction.ReadValue<Vector2>();
+            _currentDrag = _dragStart;
+        }
+
+        private void EndDrag(InputAction.CallbackContext obj)
+        {
+            _isDragging = false;
+            _trajectoryPredictor.SetTrajectoryVisible(false);
+            if (_thrower.force > 10f && _thrower.objectToThrow)
+            {
+                _thrower.ThrowObject();
+            }
+            _trajectoryPredictor.ResetTransform();
         }
 
         void Start()
         {
             // Set target direction to the camera's initial orientation.
             _targetDirection = transform.localRotation.eulerAngles;
+            _thrower = GetComponent<Thrower>();
+            _trajectoryPredictor = GetComponent<TrajectoryPredictor>();
 
             // Set target direction for the character body to its inital state.
             if (characterBody)
@@ -51,14 +82,30 @@ namespace Input
         {
             if (lockCursor)
                 Cursor.lockState = CursorLockMode.Locked;
-            var clickValue = _input.ActionMap.ClickAction.ReadValue<float>();
-            if (clickValue > 0)
+            if (_isDragging)
             {
                 Vector2 mouseDelta = _input.ActionMap.DragAction.ReadValue<Vector2>();
                 _mouseFinal += ScaleAndSmooth(mouseDelta);
+                _currentDrag += mouseDelta;
+                CalculateTrajectory();
 
                 ClampValues();
                 ApplyToTransform();
+            }
+        }
+
+        private void CalculateTrajectory()
+        {
+            float forcePercentage = -_currentDrag.y / Screen.currentResolution.height * 2;
+            _thrower.force = forcePercentage * _thrower.maxForce;
+            if (_thrower.force > 10f)
+            {
+                _thrower.Predict();
+                _trajectoryPredictor.SetTrajectoryVisible(true);
+            }
+            else
+            {
+                _trajectoryPredictor.SetTrajectoryVisible(false);
             }
         }
 
