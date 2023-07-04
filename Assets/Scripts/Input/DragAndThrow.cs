@@ -1,5 +1,6 @@
 using Projectiles;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Screen = UnityEngine.Device.Screen;
 
@@ -15,6 +16,7 @@ namespace Input
         public GameObject characterBody;
         public bool lockX;
         public bool lockY;
+        public UnityEvent OnThrow;
 
 
         private Thrower _thrower;
@@ -49,7 +51,7 @@ namespace Input
             _trajectoryPredictor.SetTrajectoryVisible(false);
             if (_thrower.force > 10f && _thrower.objectToThrow)
             {
-                _thrower.ThrowObject();
+                OnThrow.Invoke();
             }
             _trajectoryPredictor.ResetTransform();
         }

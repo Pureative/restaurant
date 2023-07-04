@@ -1,13 +1,11 @@
 ﻿using RadialFills;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Objects
 {
     public class TableController : MonoBehaviour
     {
-        public BoxCollider tableCollider;
         public SpriteRenderer orderSprite;
         public RadialSpriteFill progressFill;
         public Animator customerAnimator;
