@@ -11,8 +11,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public float LevelDuration;
-    public string PlaySceneName;
     
+    [SerializeField]
+    private string PlaySceneName;
+
+    [SerializeField]
+    private int TargetFPS = 60;
+
     public List<TableController> tableList;
     public Thrower thrower;
     public UnityEvent GameStarted;
@@ -32,6 +37,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        Application.targetFrameRate = TargetFPS;
         thrower.OnMiss.AddListener(OnMiss);
     }
 
