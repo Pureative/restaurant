@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
     
     private void OnHit(HitType hitType)
     {
-        if (thrower.objectToThrow.name.Contains(_currentTableOrder.CurrentOrderName))
+        if (thrower.currentFoodName.Contains(_currentTableOrder.CurrentOrderName))
         {
             Debug.Log($"Hit {hitType}");
             Hit.Invoke(hitType);

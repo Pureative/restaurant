@@ -57,13 +57,13 @@ namespace Input
             _initialPosition = food.transform.position;
             food.transform.position = new Vector3(_initialPosition.x, _initialPosition.y + selectedFoodYOffset, _initialPosition.z);
             food.transform.localScale = new Vector3(selectedFoodScale, selectedFoodScale, selectedFoodScale);
-            var throwableObject = GameConfig.Instance.GetFoodConfig(food.name);
-            var throwableRigidbody = throwableObject.prefab.GetComponent<Rigidbody>();
-            dragAndThrow.gameObject.transform.parent = food.transform;
-            dragAndThrow.gameObject.transform.localPosition = Vector3.zero;
+            var throwableConfig = GameConfig.Instance.GetFoodConfig(food.name);
+            var throwableObject = throwableConfig.prefab;
+            var position = food.transform.position;
+            dragAndThrow.gameObject.transform.position = position;
             dragAndThrow.gameObject.transform.localRotation = Quaternion.identity;
-            thrower.objectToThrow = throwableRigidbody;
-            waiterController.MoveToSelectPosition(food.transform.position);
+            thrower.SetThrowObject(throwableObject);
+            waiterController.MoveToSelectPosition(position);
         }
         
         private void ResetSelectedFood()
@@ -71,7 +71,7 @@ namespace Input
             CurrentSelectedFood.transform.position = _initialPosition;
             CurrentSelectedFood.transform.localScale = Vector3.one;
             CurrentSelectedFood = null;
-            thrower.objectToThrow = null;
+            // thrower.objectToThrow = null;
         }
     }
 }

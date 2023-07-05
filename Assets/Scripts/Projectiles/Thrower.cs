@@ -16,10 +16,11 @@ namespace Projectiles
         [SerializeField] Transform startDirection;
 
         [SerializeField] Transform endDirection;
+        [SerializeField] Rigidbody objectToThrow;
 
 
         [NonSerialized] public float force;
-        [NonSerialized] public Rigidbody objectToThrow;
+        [NonSerialized] public string currentFoodName;
 
         private TrajectoryPredictor _trajectoryPredictor;
         private Vector3 _direction;
@@ -27,6 +28,8 @@ namespace Projectiles
         private void OnEnable()
         {
             _trajectoryPredictor = GetComponent<TrajectoryPredictor>();
+            objectToThrow = Instantiate(objectToThrow, endDirection.position, Quaternion.identity);
+            objectToThrow.gameObject.SetActive(false);
         }
 
         public void Predict()
@@ -36,6 +39,19 @@ namespace Projectiles
             {
                 _trajectoryPredictor.PredictTrajectory(ProjectileData());
             }
+        }
+        
+        public void SetThrowObject(GameObject obj)
+        {
+            foreach (Transform child in objectToThrow.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            
+            var instance = Instantiate(obj, objectToThrow.transform);
+            instance.transform.localPosition = Vector3.zero;
+            instance.transform.localRotation = Quaternion.identity;
+            currentFoodName = obj.name;
         }
 
         void CalcDirection()
@@ -61,6 +77,7 @@ namespace Projectiles
         public void ThrowObject()
         {
             Rigidbody thrownObject = Instantiate(objectToThrow, endDirection.position, Quaternion.identity);
+            thrownObject.gameObject.SetActive(true);
             thrownObject.GetComponent<ThrowableObject>().OnMiss.AddListener(OnMiss.Invoke);
             thrownObject.AddForce(_direction * force, ForceMode.Impulse);
         }

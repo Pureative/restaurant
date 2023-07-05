@@ -54,7 +54,7 @@ namespace Input
         {
             _isDragging = false;
             _trajectoryPredictor.SetTrajectoryVisible(false);
-            if (_dragTime > 0.2f  && _thrower.force > 0.8f * minForce && _thrower.objectToThrow)
+            if (_dragTime > 0.2f  && _thrower.force > 0.8f * minForce)
             {
                 OnThrow.Invoke();
             }

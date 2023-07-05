@@ -28,8 +28,7 @@ namespace Objects
             {
                 return;
             }
-            
-            
+
             var tag = other.gameObject.tag;
             if (tag.Equals("Table"))
             {
