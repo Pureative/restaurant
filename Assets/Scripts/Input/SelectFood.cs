@@ -11,6 +11,7 @@ namespace Input
         public float selectedFoodScale = 1.5f;
         public Camera mainCamera;
         public Thrower thrower;
+        public WaiterController waiterController;
         
         public bool IsSelectingFood { get; set; }
         public GameObject CurrentSelectedFood { get; set; }
@@ -58,6 +59,7 @@ namespace Input
             var throwableObject = GameConfig.Instance.GetFoodConfig(food.name);
             var throwableRigidbody = throwableObject.prefab.GetComponent<Rigidbody>();
             thrower.objectToThrow = throwableRigidbody;
+            waiterController.MoveToSelectPosition(food.transform.position);
         }
         
         private void ResetSelectedFood()

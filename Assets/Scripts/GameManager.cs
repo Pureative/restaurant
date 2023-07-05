@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public float LevelDuration;
+    public string PlaySceneName;
+    
     public List<TableController> tableList;
     public Thrower thrower;
     public UnityEvent GameStarted;
@@ -60,9 +62,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void LoadScene(string sceneName)
+    public void Restart()
     {
-        SceneManager.LoadScene(sceneName);
+        IsLevelStarted = false;
+        IsGameEnded = false;
+        SceneManager.LoadScene(PlaySceneName);
     }
 
     public void MakeOrder()
