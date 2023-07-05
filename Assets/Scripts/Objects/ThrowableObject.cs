@@ -12,15 +12,23 @@ namespace Objects
 
         private Collider _collider;
         private Rigidbody _rigidbody;
+        private bool hitted = false;
 
         private void OnEnable()
         {
             _collider = GetComponent<Collider>();
             _rigidbody = GetComponent<Rigidbody>();
+            hitted = false;
         }
 
         public void OnCollisionEnter(Collision other)
         {
+            if (hitted)
+            {
+                return;
+            }
+            
+            
             var tag = other.gameObject.tag;
             if (tag.Equals("Table"))
             {
@@ -34,13 +42,23 @@ namespace Objects
                 {
                     OnMiss.Invoke();
                 }
-
+                hitted = true;
             }
-            else
+            else if(tag != "SelectingFood")
             {
                 OnMiss.Invoke();
+                hitted = true;
             }
+            
+            StartCoroutine(DestroyAfter(1f));
 
         }
+        
+        IEnumerator DestroyAfter(float time)
+        {
+            yield return new WaitForSeconds(time);
+            Destroy(gameObject);
+        }
+            
     }
 }

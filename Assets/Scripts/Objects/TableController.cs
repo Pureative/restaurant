@@ -14,6 +14,8 @@ namespace Objects
 
         [Range(0, 1)] public float excellentTimeInPercent = 0.4f;
         [Range(0, 1)] public float perfectTimeInPercent = 0.4f;
+        
+        public string CurrentOrderName { get; private set; }
 
         private float _orderTime;
         private float _excellentTime;
@@ -41,14 +43,15 @@ namespace Objects
             orderSprite.sprite = foodConfig.sprite;
             customerAnimator.ResetTrigger(_idleAnimationHash);
             customerAnimator.SetTrigger(_makeOrderAnimationHash);
+            CurrentOrderName = foodConfig.name;
         }
         
         public void CancelOrder()
         {
             IsOrdering = false;
             progressFill.gameObject.SetActive(false);
-            customerAnimator.SetTrigger(_idleAnimationHash);
             customerAnimator.ResetTrigger(_makeOrderAnimationHash);
+            customerAnimator.SetTrigger(_idleAnimationHash);
         }
 
         private void Update()

@@ -11,9 +11,12 @@ public class GameManager : MonoBehaviour
     
     public List<TableController> tableList;
     public Thrower thrower;
-    public UnityEvent OnTimeUp;
     public UnityEvent GameStarted;
-    
+    public UnityEvent<HitType> Hit;
+    public UnityEvent Miss;
+    public UnityEvent WrongOrder;
+    public UnityEvent OnTimeUp;
+
     private TableController _currentTableOrder;
     
     
@@ -43,6 +46,8 @@ public class GameManager : MonoBehaviour
     private void OnOrderTimeUp()
     {
         _currentTableOrder.CancelOrder();
+        _currentTableOrder.OnHit.RemoveListener(OnHit);
+        _currentTableOrder.TimeUp.RemoveListener(OnOrderTimeUp);
         _currentTableOrder = null;
         Debug.Log("Time Up");
         MakeOrder();
@@ -50,12 +55,27 @@ public class GameManager : MonoBehaviour
     private void OnMiss()
     {
         Debug.Log("Miss");
+        Miss.Invoke();
     }
     
     private void OnHit(HitType hitType)
     {
+        if (thrower.objectToThrow.name.Contains(_currentTableOrder.CurrentOrderName))
+        {
+            Debug.Log($"Hit {hitType}");
+            Hit.Invoke(hitType);
+        }
+        else
+        {
+            Debug.Log("Wrong Order");
+            WrongOrder.Invoke();
+        }
         _currentTableOrder.CancelOrder();
+        _currentTableOrder.OnHit.RemoveListener(OnHit);
+        _currentTableOrder.TimeUp.RemoveListener(OnOrderTimeUp);
         _currentTableOrder = null;
+
         MakeOrder();
+
     }
 }
