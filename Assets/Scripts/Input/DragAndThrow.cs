@@ -16,6 +16,7 @@ namespace Input
         public GameObject characterBody;
         public bool lockX;
         public bool lockY;
+        public float minForce = 15f;
         public UnityEvent OnThrow;
 
 
@@ -41,6 +42,7 @@ namespace Input
         private void StartDrag(InputAction.CallbackContext obj)
         {
             _isDragging = true;
+            _trajectoryPredictor.SetTrajectoryVisible(true);
             _dragStart = _input.ActionMap.DragAction.ReadValue<Vector2>();
             _currentDrag = _dragStart;
         }
@@ -49,7 +51,7 @@ namespace Input
         {
             _isDragging = false;
             _trajectoryPredictor.SetTrajectoryVisible(false);
-            if (_thrower.force > 10f && _thrower.objectToThrow)
+            if (_thrower.force > minForce && _thrower.objectToThrow)
             {
                 OnThrow.Invoke();
             }
@@ -99,16 +101,9 @@ namespace Input
         private void CalculateTrajectory()
         {
             float forcePercentage = -_currentDrag.y / Screen.currentResolution.height * 2;
-            _thrower.force = forcePercentage * _thrower.maxForce;
-            if (_thrower.force > 10f)
-            {
-                _thrower.Predict();
-                _trajectoryPredictor.SetTrajectoryVisible(true);
-            }
-            else
-            {
-                _trajectoryPredictor.SetTrajectoryVisible(false);
-            }
+            _thrower.force = forcePercentage * _thrower.maxForce + minForce;
+            _thrower.Predict();
+
         }
 
         void ClampValues()
