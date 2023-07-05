@@ -12,6 +12,7 @@ namespace Input
         public Camera mainCamera;
         public Thrower thrower;
         public WaiterController waiterController;
+        public DragAndThrow dragAndThrow;
         
         public bool IsSelectingFood { get; set; }
         public GameObject CurrentSelectedFood { get; set; }
@@ -58,6 +59,9 @@ namespace Input
             food.transform.localScale = new Vector3(selectedFoodScale, selectedFoodScale, selectedFoodScale);
             var throwableObject = GameConfig.Instance.GetFoodConfig(food.name);
             var throwableRigidbody = throwableObject.prefab.GetComponent<Rigidbody>();
+            dragAndThrow.gameObject.transform.parent = food.transform;
+            dragAndThrow.gameObject.transform.localPosition = Vector3.zero;
+            dragAndThrow.gameObject.transform.localRotation = Quaternion.identity;
             thrower.objectToThrow = throwableRigidbody;
             waiterController.MoveToSelectPosition(food.transform.position);
         }
