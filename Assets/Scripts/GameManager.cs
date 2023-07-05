@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent Miss;
     public UnityEvent WrongOrder;
     public UnityEvent OnTimeUp;
+    public UnityEvent RestartGame;
 
     public UnityEvent GameEnded;
     
@@ -72,13 +73,22 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
     }
+    
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+    }
 
     public void Restart()
     {
         IsLevelStarted = false;
         IsGameEnded = false;
         TimeCount = 0f;
-        SceneManager.LoadScene(PlaySceneName);
+        RestartGame.Invoke();
+        _currentTableOrder.CancelOrder();
+        _currentTableOrder = null;
+        ResumeGame();
+        
     }
 
     public void MakeOrder()
