@@ -61,7 +61,7 @@ namespace Input
             var throwableObject = throwableConfig.prefab;
             var position = food.transform.position;
             dragAndThrow.gameObject.transform.position = position;
-            dragAndThrow.gameObject.transform.localRotation = Quaternion.identity;
+            dragAndThrow.gameObject.transform.rotation = Quaternion.identity;
             thrower.SetThrowObject(throwableObject);
             waiterController.MoveToSelectPosition(position);
         }

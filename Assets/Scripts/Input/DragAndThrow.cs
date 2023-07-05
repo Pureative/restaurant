@@ -48,13 +48,15 @@ namespace Input
             _dragStart = _input.ActionMap.DragAction.ReadValue<Vector2>();
             _currentDrag = _dragStart;
             _dragTime = 0;
+            _mouseFinal = Vector2.zero;
+            transform.rotation = Quaternion.identity;
         }
 
         private void EndDrag(InputAction.CallbackContext obj)
         {
             _isDragging = false;
             _trajectoryPredictor.SetTrajectoryVisible(false);
-            if (_dragTime > 0.2f  && _thrower.force > 0.8f * minForce)
+            if (_dragTime > 0.2f  && _thrower.force > 0.8f * minForce && !string.IsNullOrEmpty(_thrower.currentFoodName))
             {
                 OnThrow.Invoke();
             }
@@ -105,7 +107,15 @@ namespace Input
         {
             float forcePercentage = -_currentDrag.y / Screen.currentResolution.height * 2;
             _thrower.force = forcePercentage * _thrower.maxForce + minForce;
-            _thrower.Predict();
+            if (string.IsNullOrEmpty(_thrower.currentFoodName))
+            {
+                _trajectoryPredictor.SetTrajectoryVisible(false);
+            }
+            else
+            {
+                _thrower.Predict();
+                _trajectoryPredictor.SetTrajectoryVisible(true);
+            }
 
         }
 
