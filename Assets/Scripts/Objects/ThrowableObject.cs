@@ -9,6 +9,7 @@ namespace Objects
     public class ThrowableObject : MonoBehaviour
     {
         public UnityEvent OnMiss;
+        public UnityEvent OnHit;
 
         private Collider _collider;
         private Rigidbody _rigidbody;
@@ -37,21 +38,22 @@ namespace Objects
                 {
                     _rigidbody.isKinematic = true;
                     _collider.enabled = false;
+                    OnHit.Invoke();
                 }
                 else
                 {
                     OnMiss.Invoke();
                 }
                 hitted = true;
+                StartCoroutine(DestroyAfter(1f));
             }
             else if(tag != "SelectingFood")
             {
                 OnMiss.Invoke();
                 hitted = true;
+                StartCoroutine(DestroyAfter(1f));
             }
             
-            StartCoroutine(DestroyAfter(1f));
-
         }
         
         IEnumerator DestroyAfter(float time)

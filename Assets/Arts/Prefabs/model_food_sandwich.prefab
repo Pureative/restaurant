@@ -129,6 +129,9 @@ MonoBehaviour:
   OnMiss:
     m_PersistentCalls:
       m_Calls: []
+  OnHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!136 &5334303286258346236
 CapsuleCollider:
   m_ObjectHideFlags: 0

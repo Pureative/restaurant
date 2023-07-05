@@ -30,6 +30,7 @@ namespace Input
         private Vector2 _dragStart;
         private Vector2 _currentDrag;
         private bool _isDragging;
+        private float _dragTime;
 
         private void OnEnable()
         {
@@ -41,21 +42,22 @@ namespace Input
 
         private void StartDrag(InputAction.CallbackContext obj)
         {
+            _trajectoryPredictor.ResetTransform();
             _isDragging = true;
             _trajectoryPredictor.SetTrajectoryVisible(true);
             _dragStart = _input.ActionMap.DragAction.ReadValue<Vector2>();
             _currentDrag = _dragStart;
+            _dragTime = 0;
         }
 
         private void EndDrag(InputAction.CallbackContext obj)
         {
             _isDragging = false;
             _trajectoryPredictor.SetTrajectoryVisible(false);
-            if (_thrower.force > 0.8f * minForce && _thrower.objectToThrow)
+            if (_dragTime > 0.2f  && _thrower.force > 0.8f * minForce && _thrower.objectToThrow)
             {
                 OnThrow.Invoke();
             }
-            _trajectoryPredictor.ResetTransform();
         }
 
         void Start()
@@ -88,13 +90,14 @@ namespace Input
                 Cursor.lockState = CursorLockMode.Locked;
             if (_isDragging)
             {
+                _dragTime += Time.deltaTime;
                 Vector2 mouseDelta = _input.ActionMap.DragAction.ReadValue<Vector2>();
                 _mouseFinal += ScaleAndSmooth(mouseDelta);
                 _currentDrag += mouseDelta;
-                CalculateTrajectory();
 
                 ClampValues();
                 ApplyToTransform();
+                CalculateTrajectory();
             }
         }
 
