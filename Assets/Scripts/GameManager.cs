@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
     {
         IsLevelStarted = false;
         IsGameEnded = false;
+        TimeCount = 0f;
         SceneManager.LoadScene(PlaySceneName);
     }
 
