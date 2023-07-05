@@ -54,7 +54,7 @@ namespace Projectiles
             projectileData.initialSpeed = force;
             projectileData.mass = r.mass;
             projectileData.drag = r.drag;
-
+            
             return projectileData;
         }
 

@@ -9,9 +9,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     
-    public UnityEvent OnTimeUp;
     public List<TableController> tableList;
-    [FormerlySerializedAs("weapon")] public Thrower thrower;
+    public Thrower thrower;
+    public UnityEvent OnTimeUp;
+    public UnityEvent GameStarted;
     
     private TableController _currentTableOrder;
     
@@ -20,6 +21,12 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         thrower.OnMiss.AddListener(OnMiss);
+    }
+
+    public void StartGame()
+    {
+        MakeOrder();
+        GameStarted.Invoke();
     }
 
     public void MakeOrder()

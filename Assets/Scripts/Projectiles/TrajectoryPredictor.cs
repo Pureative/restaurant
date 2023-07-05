@@ -41,11 +41,14 @@ namespace Projectiles
                 nextPosition = position + velocity * increment;
                 
                 overlap = Vector3.Distance(position, nextPosition) * rayOverlap;
-                
-                if (Physics.Raycast(position, velocity.normalized, out RaycastHit hit, overlap))
+
+                if (i > 5)
                 {
-                    UpdateLineRender(i, (i - 1, hit.point));
-                    break;
+                    if (Physics.Raycast(position, velocity.normalized, out RaycastHit hit, overlap))
+                    {
+                        UpdateLineRender(i, (i - 1, hit.point));
+                        break;
+                    }
                 }
                 
                 position = nextPosition;
